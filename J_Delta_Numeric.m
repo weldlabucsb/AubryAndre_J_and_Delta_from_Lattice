@@ -36,8 +36,6 @@ function [J,Delta] = J_Delta_Numeric(s1,s2,lambda1,lambda2,showPlots)
 %   Outputs J and Delta are both given in units of the recoil energy of
 %   the primary lattice laser.
 
-
-    close all
     % #########################################################################################
     % INPUT PARAMETERS
     % #########################################################################################
@@ -152,7 +150,7 @@ function [J,Delta] = J_Delta_Numeric(s1,s2,lambda1,lambda2,showPlots)
         error('The imaginary part of J is larger than 1e-10, which probably means that the numerics are not working.  Try increasing Gmax maybe?')
     end
     assert(mbSites(2)==1,'mbSites(2) must be set to 1 in order to get J correctly. (This can be changed if you also change the element of manyBody.J that is extracted.)')
-    J = real(manyBody.J(1,1,2));
+    J = real(-manyBody.J(1,1,2));
     
     
     %% Calculating Delta
@@ -170,7 +168,7 @@ function [J,Delta] = J_Delta_Numeric(s1,s2,lambda1,lambda2,showPlots)
     dVol = manyBody.SCell.dVol;
     
     % Integral in definition of Delta
-    deltaIntegral = trapz( dVol, cos(4*pi*beta*X).*W.^2);
+    deltaIntegral = dVol*trapz( cos(4*pi*beta*X).*W.^2);
     
     Delta = 0.5*s2*beta^2*deltaIntegral;
     
