@@ -15,11 +15,11 @@
 function [lattice, recip, potential, bloch, neighbours, wannier90, manyBody] = ...
     RunWannier(filename)
 
-disp('-----------------------------------------------------------------------------');
-disp('MAXIMALLY LOCALISED GENERALISED WANNIER FUNCTIONS');
-disp('Richard Walters, Giovanni Cotugno, Tomi Johnson, Stephen Clark, Dieter Jaksch');
-disp('Atomic and Laser Physics, Clarendon Laboratory, University of Oxford');
-disp('-----------------------------------------------------------------------------');
+% disp('-----------------------------------------------------------------------------');
+% disp('MAXIMALLY LOCALISED GENERALISED WANNIER FUNCTIONS');
+% disp('Richard Walters, Giovanni Cotugno, Tomi Johnson, Stephen Clark, Dieter Jaksch');
+% disp('Atomic and Laser Physics, Clarendon Laboratory, University of Oxford');
+% disp('-----------------------------------------------------------------------------');
 
 
 % Load the RunWannier parameters
@@ -85,22 +85,23 @@ if exist(blochData, 'file') ~= 2 || strcmp(recalcBloch, 'true')
     neighbours = Neighbours(lattice, bloch.Q.Density(1), bloch.Q.MeshInd);
     % Save band structure calculation
     save(blochData, 'lattice', 'potential', 'recip', 'bloch', 'neighbours');
-    disp(['Saved Bloch data in file ' blochData]);
+%     disp(['Saved Bloch data in file ' blochData]);
     % Create an instance of Wannier90
     wannier90 = Wannier90(bloch.State, bloch.Q.MeshInd, recip, neighbours);
     % Run the wannier90 algorithm on each band in bloch
     wannier90 = wannier90.Isolated(lattice.Dimension, bloch.Q.Mesh, neighbours, epsilon, iterIso);
     % Save all the objects created thus far
     save(isolatedData, 'wannier90');
-    disp(['Saved isolated band Wannier data in file ' isolatedData]);
+%     disp(['Saved isolated band Wannier data in file ' isolatedData]);
 else
-    disp('Using Bloch data from file');
+%     disp('Using Bloch data from file');
     load(blochData);
-    disp('Using isolated Wannier data from file');
+%     disp('Using isolated Wannier data from file');
     load(isolatedData);
 end
 
 % Set which bands belong to composite groups 
+
 wannier90 = wannier90.SetGroups(groups);
 
 if exist(compositeData, 'file') ~= 2 || strcmp(recalcComposite, 'true')
@@ -147,13 +148,13 @@ if exist(manyBodyData, 'file') ~= 2 || strcmp(recalcManyBody, 'true') ...
     manyBody = manyBody.CalculateInteraction();
     % Save the manyBody instance
     save(manyBodyData, 'manyBody');
-    disp(['Saved many-body data in file ' manyBodyData]);
+%     disp(['Saved many-body data in file ' manyBodyData]);
 else
     disp('Using many-body data from file');
     load(manyBodyData);
 end
 
-disp('-------------------------------------------------');
-disp('MAXIMALLY LOCALISED GENERALISED WANNIER FUNCTIONS');
-disp('End of calculations');
-disp('-------------------------------------------------');
+% disp('-------------------------------------------------');
+% disp('MAXIMALLY LOCALISED GENERALISED WANNIER FUNCTIONS');
+% disp('End of calculations');
+% disp('-------------------------------------------------');

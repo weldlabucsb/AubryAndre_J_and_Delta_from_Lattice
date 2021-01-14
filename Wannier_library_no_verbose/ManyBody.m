@@ -76,7 +76,7 @@ classdef ManyBody
             %  calcMode --> choose whether to calculate the Wannier functions using 'multiprod' or to use a 
             %               for 'loop'
             
-            disp('Calculating real space Wannier data...');
+%             disp('Calculating real space Wannier data...');
             tic;
             superCell = manyBody.SCell;
             % Convert sites to cartesian coordinates
@@ -107,7 +107,8 @@ classdef ManyBody
                     manyBody.W = zeros(numSites, numBands, numXpts);
                     for x = 1 : numXpts
                         if x / 100 == round(x / 100)
-                            disp(['x = ' num2str(x) '/' num2str(numXpts)]); end
+%                             disp(['x = ' num2str(x) '/' num2str(numXpts)]); 
+                        end
                         % The periodic Bloch function given by q, x and n
                         u = permute(multiprod(exp(1i * transpose(superCell.Mesh(:, x)) * recip.Gk), ...
                             state) / sqrt(lattice.Vol), [2 3 1]);
@@ -127,7 +128,7 @@ classdef ManyBody
             manyBody.W = manyBody.W .* permute(Wphase(:, :, ones(1, numXpts)), [3 1 2]);
             manyBody.W = real(manyBody.W);
             manyBody.UPhase = diag(Wphase(:,1));
-            toc;
+%             toc;
         end
         
         function manyBody = CalculateHopping(manyBody, lattice, bloch, wannier90)
@@ -138,7 +139,7 @@ classdef ManyBody
             %     bloch --> instance of the Bloch class
             % wannier90 --> instance of the Wannier90 class
             
-            disp('Calculating hopping matrix elements...');
+%             disp('Calculating hopping matrix elements...');
             tic;
             % Convert sites to cartesian coordinates
             sites = transpose(lattice.R * manyBody.Sites); 
@@ -153,13 +154,13 @@ classdef ManyBody
             % The hopping matrix elements given by band numbers m and n, and lattice centre j
             manyBody.J = permute(multiprod(exp(1i * sites * bloch.Q.Mesh), UDU) * ...
                 bloch.Q.dVol * lattice.Vol / ((2 * pi) ^ dim), [2 3 1]); % m,n,j
-            toc;
+%             toc;
         end
         
         function manyBody = CalculateInteraction(manyBody)
             % CALCULATE THE INTERACTION MATRIX ELEMENTS
             
-            disp('Calculating many-body interaction matrix elements...');
+%             disp('Calculating many-body interaction matrix elements...');
             tic;
             % Set variables
             superCell = manyBody.SCell;
@@ -191,7 +192,7 @@ classdef ManyBody
                 manyBody.Uj0j0(:,:,j) = superCell.dVol * transpose(manyBody.W(:,:,j) .* manyBody.W(:,:,1)) * ...
                     (manyBody.W(:,:,j) .* manyBody.W(:,:,1));
             end
-            toc;
+%             toc;
         end
         
         

@@ -95,14 +95,14 @@ classdef Wannier90
             %    epsilon --> a parameter used in the Wannier90 algorithm. Set between 0 and 1
             %    maxIter --> the maximum number of Wannier90 iterations
             
-            disp('Minimising the Wannier spread of the Bloch bands, treating each as isolated...');
+%             disp('Minimising the Wannier spread of the Bloch bands, treating each as isolated...');
             tic;
             numBvecs = size(neighbours.B, 2);
             numBands = size(wannier90.Mmn, 1); numQpts = size(wannier90.Mmn, 3);
             UTemp = eye(numBands); UTemp = UTemp(:, :, ones(1, numQpts));
             % Use the steepest descent algorithm to minimise omegaD
             for n = 1 : numBands
-                disp(['Minimising omegaD for Bloch band ' num2str(n)]);
+%                 disp(['Minimising omegaD for Bloch band ' num2str(n)]);
                 % If the Wannier states have inversion symmetry, omegaD = 0, and the phases can be set manually
                 % (see Sec. IV.C.3 of Ref 1)
                 [UInv, MmnTemp] = Wannier90Inversion(dimension, neighbours, squeeze(wannier90.Mmn(n,n,:,:)));
@@ -122,7 +122,7 @@ classdef Wannier90
                 wannier90.Mmn);
             wannier90.Mmn = multiprod(wannier90.Mmn, reshape(UTemp(:,:,neighbours.Nearest), numBands, ...
                 numBands, numQpts, numBvecs));
-            toc;
+%             toc;
         end
         
         function wannier90 = ParallelTransport(wannier90, mesh, neighbours)
@@ -136,7 +136,7 @@ classdef Wannier90
                 disp('ParallelTransport may only be used in one dimension');
                 return;
             end
-            disp('Using parallel transport to minimise the Wannier spread of each composite group...');
+%             disp('Using parallel transport to minimise the Wannier spread of each composite group...');
             tic;
             groups = wannier90.GroupsAsc; dim = size(neighbours.B, 1);
             numBands = size(wannier90.Mmn, 1); numQpts = size(wannier90.Mmn, 3);
@@ -144,7 +144,7 @@ classdef Wannier90
             % Use the steepest descent algorithm to minimise omegaOD
             for n = 1 : length(groups)
                 if length(groups{n}) > 1
-                    disp(['Band group ' num2str(n) ': minimising the gauge-dependent part of the spread \tilde{omega} via steepest-descent...']);
+%                     disp(['Band group ' num2str(n) ': minimising the gauge-dependent part of the spread \tilde{omega} via steepest-descent...']);
                     % Run the Wannier90 algorithm for the composite group
                     [UTemp, omega, omegaI, omegaD, omegaOD, centre, MmnTemp] = Wannier90ParallelTransport(...
                         wannier90.Mmn(groups{n}, groups{n}, :, :), neighbours, mesh);
@@ -156,7 +156,7 @@ classdef Wannier90
                     wannier90.GroupOmegaD(n) = omegaD(end);
                     wannier90.GroupOmegaOD(n) = omegaOD(end);
                 else % Isolated bands should already be minimised using the isolated version above
-                    disp(['Band group ' num2str(n) ': isolated band']);
+%                     disp(['Band group ' num2str(n) ': isolated band']);
                     % The phases between nearest-neighbour q-points
                     phase = imag(log(squeeze(wannier90.Mmn(n,n,:,:))));
                     % Calculate the position of the Wannier centre, Eq. 31 of Ref. 1
@@ -174,7 +174,7 @@ classdef Wannier90
             end
             wannier90.U = multiprod(wannier90.U, UComp);
             wannier90 = wannier90.SingleBandProperties(neighbours);
-            toc;
+%             toc;
         end
         
         function wannier90 = Composite(wannier90, mesh, neighbours, epsilon, maxIter)
@@ -186,7 +186,7 @@ classdef Wannier90
             %    epsilon --> a parameter used in the Wannier90 algorithm. Set between 0 and 1
             %    maxIter --> the maximum number of Wannier90 iterations
             
-            disp('Minimising the Wannier spread of each composite group...');
+%             disp('Minimising the Wannier spread of each composite group...');
             tic;
             groups = wannier90.GroupsAsc; dim = size(neighbours.B, 1);
             numBands = size(wannier90.Mmn, 1); numQpts = size(wannier90.Mmn, 3);
@@ -194,7 +194,7 @@ classdef Wannier90
             % Use the steepest descent algorithm to minimise omegaOD
             for n = 1 : length(groups)
                 if length(groups{n}) > 1
-                    disp(['Band group ' num2str(n) ': minimising the gauge-dependent part of the spread \tilde{omega} via steepest-descent...']);
+%                     disp(['Band group ' num2str(n) ': minimising the gauge-dependent part of the spread \tilde{omega} via steepest-descent...']);
                     % Run the Wannier90 algorithm for the composite group
                     [UTemp, omega, omegaI, omegaD, omegaOD, centre, MmnTemp] = Wannier90Composite(...
                         wannier90.Mmn(groups{n}, groups{n}, :, :), neighbours, epsilon, maxIter, mesh);
@@ -206,7 +206,7 @@ classdef Wannier90
                     wannier90.GroupOmegaD(n) = omegaD(end);
                     wannier90.GroupOmegaOD(n) = omegaOD(end);
                 else % Isolated bands should already be minimised using the isolated version above
-                    disp(['Band group ' num2str(n) ': isolated band']);
+%                     disp(['Band group ' num2str(n) ': isolated band']);
                     % The phases between nearest-neighbour q-points
                     phase = imag(log(squeeze(wannier90.Mmn(n,n,:,:))));
                     % Calculate the position of the Wannier centre, Eq. 31 of Ref. 1
@@ -224,7 +224,7 @@ classdef Wannier90
             end
             wannier90.U = multiprod(wannier90.U, UComp);
             wannier90 = wannier90.SingleBandProperties(neighbours);
-            toc;
+%             toc;
         end
         
         function wannier90 = Disentangle(wannier90, neighbours, alpha, maxIter, randomise)
@@ -236,7 +236,7 @@ classdef Wannier90
             %    maxIter --> the maximum number of iterations
             %  randomise --> set 'True' to randomise the initial configuration
             
-            disp('Using the Souza et al. algorithm to reduce the contribution to omega_OD from each group of bands...');
+%             disp('Using the Souza et al. algorithm to reduce the contribution to omega_OD from each group of bands...');
             tic;
             groups = wannier90.GroupsAsc; dim = size(neighbours.B, 1);
             numBands = size(wannier90.Mmn, 1); numQpts = size(wannier90.Mmn, 3);
@@ -244,7 +244,7 @@ classdef Wannier90
             % Use the disentangling algorithm to minimise omegaI for each band in the group
             for n = 1 : length(groups)
                 if length(groups{n}) > 1 % Disentangle each band in the group in turn
-                    disp(['Band group ' num2str(n) ': optimally extacting a single band...']);
+%                     disp(['Band group ' num2str(n) ': optimally extacting a single band...']);
                     % Run the wannier90 disentangling algorithm to minimise omegaI for each band
                     [UTemp, omega, omegaI, omegaD, omegaOD, centre, MmnTemp] = Wannier90Disentangle( ...
                         wannier90.Mmn(groups{n}, groups{n}, :, :), neighbours, alpha, maxIter, randomise);
@@ -256,7 +256,7 @@ classdef Wannier90
                     wannier90.GroupOmegaD(n) = omegaD(end);
                     wannier90.GroupOmegaOD(n) = omegaOD(end);
                 else % Isolated bands don't need disentangling
-                    disp(['Band group ' num2str(n) ': isolated band']);
+%                     disp(['Band group ' num2str(n) ': isolated band']);
                     % The phases between nearest-neighbour q-points
                     phase = imag(log(squeeze(wannier90.Mmn(n,n,:,:))));
                     % Calculate the position of the Wannier centre, Eq. 31 of Ref. 1
@@ -274,7 +274,7 @@ classdef Wannier90
             end
             wannier90.U = multiprod(wannier90.U, UComp);
             wannier90 = wannier90.SingleBandProperties(neighbours);
-            toc;
+%             toc;
         end
         
         function wannier90 = SingleBandProperties(wannier90, neighbours)

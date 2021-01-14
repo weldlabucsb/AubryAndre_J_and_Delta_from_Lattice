@@ -53,10 +53,10 @@ classdef Bloch
 % If the central q-point is at the origin, use time-reversal symmetry to obtain Bloch data for one half of the
 % mesh from the other half
 % ------------------------------------------------------------------------------------------------------------
-            disp('Calculating the bandstructure across a uniform mesh...');
+%             disp('Calculating the bandstructure across a uniform mesh...');
             tic;
             if strcmp(timeReversal, 'origin')
-                disp('Using time-reversal symmetry; mesh centred on origin');
+%                 disp('Using time-reversal symmetry; mesh centred on origin');
                 % Create a mesh of quasi-momenta points
                 qTemp = SuperCell(lattice.Dimension, lattice.G, [N N N], [0 0; 0 0; 0 0], 'true', [0 0 0]);
                 % Set variables
@@ -67,7 +67,8 @@ classdef Bloch
                 % Loop over q-points
                 for q = 1 : (numQpts + 1) / 2
                     if (q - 1) / 10 == round((q - 1) / 10)
-                        disp(['q = ' num2str(q) '/' num2str((numQpts + 1) / 2)]); end
+%                         disp(['q = ' num2str(q) '/' num2str((numQpts + 1) / 2)]); 
+                    end
                     % The kinetic energy term of the Hamiltonian
                     h = keCoeff * diag(sum((recip.Gk + qk(:,:,q)) .^ 2, 1));
                     % The full Hamiltonian at q-point q
@@ -115,7 +116,7 @@ classdef Bloch
 % data for one half of the mesh from the other half
 % --------------------------------------------------------------------------------------------------------------
             elseif strcmp(timeReversal, 'shifted')
-                disp('Using time-reversal symmetry; mesh shifted from origin');
+%                 disp('Using time-reversal symmetry; mesh shifted from origin');
                 % Create a mesh of quasi-momenta points
                 bloch.Q = SuperCell(lattice.Dimension, lattice.G, [N N N], [0 0; 0 0; 0 0], 'false', [1/N 1/N 1/N]);
                 numQpts = bloch.Q.NumPts;
@@ -126,7 +127,8 @@ classdef Bloch
                 % Loop over q-points
                 for q = 1 : numQpts / 2
                     if (q - 1) / 10 == round((q - 1) / 10)
-                        disp(['q = ' num2str(q) '/' num2str(numQpts / 2)]); end
+%                         disp(['q = ' num2str(q) '/' num2str(numQpts / 2)]); 
+                    end
                     % The kinetic energy term of the Hamiltonian
                     h = keCoeff * diag(sum((recip.Gk + qk(:,:,q)) .^ 2, 1));
                     % The full Hamiltonian at q-point q
@@ -149,7 +151,7 @@ classdef Bloch
 % Otherwise, calculate the Bloch data at all mesh-points (cannot use time-reversal symmetry)
 % ------------------------------------------------------------------------------------------
             else
-                disp('Not using time-reversal symmetry');
+%                 disp('Not using time-reversal symmetry');
                 % Create a mesh of quasi-momenta points
                 bloch.Q = SuperCell(lattice.Dimension, lattice.G, [N N N], [0 0; 0 0; 0 0], 'false', [1/N 1/N 1/N]);
                 numQpts = bloch.Q.NumPts;
@@ -180,7 +182,7 @@ classdef Bloch
             state(abs(state) < 1e-8) = state(abs(state) < 1e-8) + 1e-30i;
             bloch.State = state;
             bloch.Energy = energy;
-            toc;
+%             toc;
         end
     end
 end

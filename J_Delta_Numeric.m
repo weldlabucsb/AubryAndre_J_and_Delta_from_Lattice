@@ -117,7 +117,7 @@ function [J,Delta] = J_Delta_Numeric(s1,s2,lambda1,lambda2,showPlots)
     % PRE-PROCESSING CODE
     % -------------------
     % Add library folder to the Matlab path
-    path('./Wannier_library', path);
+    path('./Wannier_library_no_verbose', path);
     % Create data directories if they don't exist
     if exist('./Wannier_data', 'dir') ~= 7
         mkdir('./Wannier_data'); end

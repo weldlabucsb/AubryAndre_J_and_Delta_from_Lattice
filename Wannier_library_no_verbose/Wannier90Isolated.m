@@ -29,7 +29,7 @@ phase = imag(log(Mmn)); % Phases between nn. mesh points
 centre = -sum(repmat(neighbours.Weight .* sum(phase, 1), dim, 1) .* neighbours.B, 2) / numQpts; % Position of the Wannier centre, Eq. 31
 Brdash = transpose(centre) * neighbours.B; qn = phase + Brdash(ones(1, numQpts), :);
 loop = 1; omegaD(loop) = sum(((-qn) .^ 2) * transpose(neighbours.Weight)) / numQpts; % Eq. 47
-disp(['Iteration = 0, omegaD = ' num2str(omegaD(loop), 4)]); % Eq. 36
+% disp(['Iteration = 0, omegaD = ' num2str(omegaD(loop), 4)]); % Eq. 36
 
 % Use the Wannier90 steepest-descent algorithm to reduce omegaD
 while loop <= maxIter
@@ -41,12 +41,13 @@ while loop <= maxIter
     Brdash = transpose(centre) * neighbours.B; qn = phase + Brdash(ones(1, numQpts), :); % Recalculate qn, Eq. 47
     loop = loop + 1; omegaD(loop) = sum(((-qn) .^ 2) * transpose(neighbours.Weight)) / numQpts; % Recalculate omegaD, Eq. 36
     if (loop - 1) / 100 == round((loop - 1) / 100)
-        disp(['Iteration = ' num2str(loop - 1) ', omegaD = ' num2str(omegaD(loop), 4)]); end
+%         disp(['Iteration = ' num2str(loop - 1) ', omegaD = ' num2str(omegaD(loop), 4)]); 
+    end
 end
 omegaD(omegaD == 0) = []; % Remove cells if loop<iter
 if isempty(omegaD)
     omegaD = 0; end
-disp(['The total no. of wannier90 iterations is ', num2str(loop - 1)]);
+% disp(['The total no. of wannier90 iterations is ', num2str(loop - 1)]);
 
 % Calculate the invariant part of the total spread, Eq. 34
 omegaI = neighbours.Weight * transpose(1 - sum(abs(Mmn) .^ 2, 1) / numQpts);
