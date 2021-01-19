@@ -1,2 +1,4 @@
 .DS_Store
 JandDelta.nb
+*.m~
+Wannier_data
