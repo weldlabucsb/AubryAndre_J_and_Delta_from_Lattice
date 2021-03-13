@@ -1,4 +1,5 @@
-function outTable = compare_J_Delta_Mentods(s1,s2,lambda1,lambda2)
+function outTable = compare_J_Delta_Methods(s1,s2,lambda1,lambda2)
+tic
     if size(s1,2)==1
         s1 = transpose(s1);
     end
@@ -20,9 +21,11 @@ function outTable = compare_J_Delta_Mentods(s1,s2,lambda1,lambda2)
     J_gauss = [];
     J_num_approx = [];
     J_num = [];
+    J_piecewise = [];
     
     De_gauss = [];
     De_num = [];
+    De_piecewise = [];
     
     for s1_i = s1
         for s2_i = s2
@@ -43,14 +46,18 @@ function outTable = compare_J_Delta_Mentods(s1,s2,lambda1,lambda2)
                     [J_num_i,De_num_i] = J_Delta_Numeric(s1_i,s2_i,la1_i,la2_i,0);
                     J_num = [J_num;J_num_i];
                     De_num = [De_num;De_num_i];
+                    
+                    [J_piecewise_i, De_piecewise_i] = J_Delta_PiecewiseFit(s1_i,s2_i);
+                    J_piecewise = [J_piecewise;J_piecewise_i];
+                    De_piecewise = [De_piecewise;De_piecewise_i];
 
                 end
             end
         end
     end
     
-    tabEntries = {'s1','s2','lambda1','lambda2','J Gauss W Approx', 'J Approx Formula','J Numeric', 'Delta Gauss W Approx','Delta Numeric'};
-    outTable = table(s1s,s2s,la1s,la2s,J_gauss,J_num_approx,J_num,De_gauss,De_num,'VariableNames',tabEntries);
-    
+    tabEntries = {'s1','s2','lambda1','lambda2','J Gauss W Approx', 'J Approx Formula','J Numeric', 'J Piecewise Fit', 'Delta Gauss W Approx','Delta Numeric','Delta Piecewise Fit'};
+    outTable = table(s1s,s2s,la1s,la2s,J_gauss,J_num_approx,J_num,J_piecewise,De_gauss,De_num,De_piecewise,'VariableNames',tabEntries);
+toc
 end
 
